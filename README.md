@@ -29,7 +29,7 @@
 - **threshold**
 
   - 类型：`number`
-  - 描述：机器学习得分阈值，范围为`(0,1]`，建议设置在0.98以上。默认为1.00，即为纯字典匹配方法。
+  - 描述：机器学习得分阈值，范围为`(0,1]`，建议设置在0.9及以上。默认为1.00，即为纯字典匹配方法。
   - 注意：纯字典匹配方法速度相对较快，若使用非纯字典匹配方法，识别一段100字左右的医学文本大概需要耗费5~10秒。
 
 - **nest**
@@ -39,21 +39,21 @@
 
 ## 请求示例
 
-### 示例 1：处理单个文本
+### 示例 1：处理单个文本(推荐测试方法)
 
 ```json
 {
     "texts": "<医学病历1>",
-    "threshold": 1,
-    "nest": true
+    "threshold": 0.95,
+    "nest": false
 }
 ```
 
-### 示例 1：处理单个文本
+### 示例 2：处理多个文本
 
 ```json
 {
-    "texts": ["<医学病历1>", "<医学病历2>", ...],
+    "texts": ["<医学病历1>", "<医学病历2>", "..."],
     "threshold": 1,
     "nest": true
 }
@@ -104,10 +104,13 @@
 ### 识别结果字典
 
 ```
-results["final_result"] = {[[start_position, end_position], HPO_name, HPO_id, score]}
+results["final_result"] = {[[start_position, end_position], text, HPO_id, HPO_name, CHPO_name, score, label]}
 ```
 
 - `[start_position, end_position]`: 该HPO实体在`process_text`中的起始位置。
-- `HPO_name`：该HPO实体名称。
+- `text`: `[start_position, end_position]`间的文本片段。
 - `HPO_id`: 该HPO实体对应的HPO编码。
+- `HPO_name`：该HPO实体的英文名称。
+- `CHPO_name`：该HPO实体的中文名称。
 - `score`: 实体得分。字典匹配分数为1.00，非字典匹配下限由`threshold`决定。
+- `label`: 实体是否被否定词修饰。若为`pos`则未被否定词修饰，若位`neg`则被否定词修饰(可以选择过滤掉该HPO实体)。
