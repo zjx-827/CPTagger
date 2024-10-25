@@ -24,14 +24,15 @@ def call_cptagger_api(texts, threshold=None, nest=None):
 
 # 示例调用
 if __name__ == "__main__":
-    texts = [
-            "xxx",
-             ]
-    threshold = 1
+    texts = ["xxx", ]
+    threshold = 0.95
     nest = False
     # 调用 API
     results = call_cptagger_api(texts, threshold, nest)
-    for result in results:
-        print('字典匹配结果：', result["dict_result"])
-        print('机器学习匹配结果：', result["ml_result"])
-        print('集成匹配结果：', result["final_result"])
+    for i, result in enumerate(results):
+        print(f'待识别文本{i}：', texts[i])
+        for j, res in enumerate(result):
+            print(f'\t文本片段{i}/{j}：', res["text"])
+            print('\t\t字典匹配结果：', res["dict_result"])
+            print('\t\t机器学习匹配结果：', res["ml_result"])
+            print('\t\t集成匹配结果：', res["final_result"])
